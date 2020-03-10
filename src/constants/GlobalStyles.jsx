@@ -11,7 +11,8 @@ const GlobalStyles = createGlobalStyle`
   body {
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
-    height: 100vh;
+    min-height: 100vh;
+    height: fit-content;
     width: 100vw;
     margin: 0;
     padding: 0;

@@ -13,6 +13,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  align-self: center;
 `;
 
 const Matrix = styled.div`
@@ -43,6 +44,7 @@ const Code = styled.textarea`
   border: 0.4em solid ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.text};
   font-size: 1em;
+  margin-bottom: 2em;
 `;
 
 const HomePage = () => {
@@ -86,7 +88,7 @@ const HomePage = () => {
           <RowFlex>
             <Button
               title="Change Size"
-              nClick={() => {
+              onClick={() => {
                 setGrid(0);
                 setCode('');
               }}

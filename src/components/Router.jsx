@@ -19,6 +19,7 @@ import HomePage from 'routes/HomePage';
 const history = createBrowserHistory();
 
 const Body = styled.div`
+  min-height: 100vh;
   height: 100%;
   width: 100%;
   padding-top: 64px;
