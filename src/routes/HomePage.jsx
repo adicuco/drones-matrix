@@ -29,6 +29,11 @@ const MatrixItem = styled.div`
   background: ${({ isSelected, theme, color }) =>
     isSelected ? color : theme.secondary};
   transition: all 0.2s ease-in-out;
+  color: black;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
 
   & :hover {
     transform: scale(1.1);
@@ -74,18 +79,12 @@ const HomePage = () => {
   const handleGenerateCode = () => {
     let selected = [];
 
-    for (let row = 0; row < grid; row++) {
-      for (let column = 0; column < grid; column++) {
-        if (matrix[row][column].isSelected) {
-          selected.push({
-            x: column,
-            y: row,
-            drone: `d${matrix[row][column].id}`,
-          });
-        }
-      }
-    }
-    setCode(JSON.stringify(selected));
+    selected = drones.map((drone, i) => ({
+      x: drone.x,
+      y: drone.y,
+      drone: `d${i + 1}`,
+    }));
+    setCode(JSON.stringify(selected).replace(/"/g, ''));
   };
 
   return (
@@ -145,7 +144,12 @@ const HomePage = () => {
                       setDrones(newDrones);
                       setMatrix(newMatrix);
                     }}
-                  />
+                  >
+                    {drones.findIndex(d => drone.id === d.id) > -1
+                      ? `d${drones.findIndex(d => drone.id === d.id) +
+                          1}`
+                      : ''}
+                  </MatrixItem>
                 ))}
               </RowFlex>
             ))}
