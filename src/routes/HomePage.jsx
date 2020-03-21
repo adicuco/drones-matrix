@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 import Button from 'components/Button';
 import Form from 'components/Form';
+
+import colors from 'constants/colors';
 
 const Container = styled.div`
   height: 100%;
@@ -25,8 +26,8 @@ const MatrixItem = styled.div`
   height: 5em;
   width: 5em;
   margin: 0.5em;
-  background: ${({ isSelected, theme }) =>
-    isSelected ? theme.primary : theme.secondary};
+  background: ${({ isSelected, theme, color }) =>
+    isSelected ? color : theme.secondary};
   transition: all 0.2s ease-in-out;
 
   & :hover {
@@ -51,17 +52,20 @@ const HomePage = () => {
   const [grid, setGrid] = useState(0);
   const [matrix, setMatrix] = useState([]);
   const [code, setCode] = useState('');
+  const [drones, setDrones] = useState([]);
 
   useEffect(() => {
     createMatrix();
   }, [grid]);
 
   const createMatrix = () => {
+    let id = 1;
     let newMatrix = [];
     for (let row = 0; row < grid; row++) {
       newMatrix.push([]);
       for (let column = 0; column < grid; column++) {
-        newMatrix[row].push(false);
+        newMatrix[row].push({ id, isSelected: false });
+        id++;
       }
     }
     setMatrix(newMatrix);
@@ -72,8 +76,12 @@ const HomePage = () => {
 
     for (let row = 0; row < grid; row++) {
       for (let column = 0; column < grid; column++) {
-        if (matrix[row][column]) {
-          selected.push({ x: column, y: row });
+        if (matrix[row][column].isSelected) {
+          selected.push({
+            x: column,
+            y: row,
+            drone: `d${matrix[row][column].id}`,
+          });
         }
       }
     }
@@ -98,21 +106,43 @@ const HomePage = () => {
               onClick={() => {
                 createMatrix();
                 setCode('');
+                setDrones([]);
               }}
             />
           </RowFlex>
           <Matrix>
             {matrix.map((row, rowIndex) => (
               <RowFlex key={rowIndex}>
-                {row.map((value, columnIndex) => (
+                {row.map((drone, columnIndex) => (
                   <MatrixItem
+                    color={
+                      colors[drones.findIndex(d => drone.id === d.id)]
+                    }
                     key={columnIndex}
-                    isSelected={value}
+                    isSelected={drone.isSelected}
                     onClick={() => {
                       let newMatrix = [...matrix];
-                      newMatrix[rowIndex][columnIndex] = !newMatrix[
-                        rowIndex
-                      ][columnIndex];
+                      const isSelected = !newMatrix[rowIndex][
+                        columnIndex
+                      ].isSelected;
+
+                      newMatrix[rowIndex][
+                        columnIndex
+                      ].isSelected = isSelected;
+
+                      let newDrones = [...drones];
+                      if (isSelected) {
+                        newDrones.push({
+                          id: drone.id,
+                          x: columnIndex,
+                          y: rowIndex,
+                        });
+                      } else {
+                        newDrones = newDrones.filter(
+                          d => d.id !== drone.id
+                        );
+                      }
+                      setDrones(newDrones);
                       setMatrix(newMatrix);
                     }}
                   />
