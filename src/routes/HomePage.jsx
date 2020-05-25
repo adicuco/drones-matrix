@@ -80,9 +80,9 @@ const HomePage = () => {
     let selected = [];
 
     selected = drones.map((drone, i) => ({
-      x: drone.x,
-      y: drone.y,
       drone: `d${i + 1}`,
+      x: drone.x + 1,
+      y: drone.y + 1,
     }));
     setCode(JSON.stringify(selected).replace(/"/g, ''));
   };
